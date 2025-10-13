@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { guardarVoto } from "../services/api";
 
 export default function Confirmacion() {
   const navigate = useNavigate();
@@ -11,6 +12,36 @@ export default function Confirmacion() {
     setCandidato(c);
   }, []);
 
+
+  //confirma voto 2.0
+ // import { guardarVoto } from "../services/api"; // ajusta la ruta según tu estructura
+
+const confirmar = async () => {
+  try {
+    const dni = localStorage.getItem("dni"); // DNI del usuario autenticado
+    const voto = {
+      dni,
+      partido: candidato?.partido ?? "N/D",
+      nombre: candidato?.nombre ?? "N/D",
+      ts: Date.now(),
+    };
+
+    await guardarVoto(voto); // Llama a tu API en Django
+
+    //Mensaje de éxito
+    alert("✅ Tu voto fue registrado correctamente");
+
+    setOk(true);
+  } catch (error) {
+    console.error("Error al guardar el voto:", error);
+    alert("⚠️ Hubo un error al guardar el voto");
+  }
+};
+
+
+
+
+  /**
   const confirmar = () => {
     // guarda voto en localStorage para reportes
     const votos = JSON.parse(localStorage.getItem("votos") || "[]");
@@ -21,7 +52,7 @@ export default function Confirmacion() {
     });
     localStorage.setItem("votos", JSON.stringify(votos));
     setOk(true);
-  };
+  }; **/
 
   const salir = () => {
     // intenta cerrar ventana; si el navegador lo bloquea, vuelve al inicio

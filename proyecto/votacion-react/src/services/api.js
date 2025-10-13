@@ -200,3 +200,12 @@ export async function webauthnAuthenticateVerify(assertion) {
  * @type {{b64urlToArrayBuffer: function, arrayBufferToB64url: function}}
  */
 export const webauthnCodec = { b64urlToArrayBuffer, arrayBufferToB64url };
+
+
+//Guardar votos
+const API_URL = "http://localhost:8000/api"; // tu servidor Django
+
+export const guardarVoto = async (voto) => {
+  const response = await axios.post("http://localhost:8000/api/guardar_voto/", voto);
+  return response.data;
+};

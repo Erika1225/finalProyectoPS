@@ -3,6 +3,7 @@ from .views import (
     verificar_dni,
     verificar_foto,
     login_dni,
+    guardar_voto,
     webauthn_register_options,
     webauthn_register_verify,
     webauthn_authenticate_options,
@@ -18,4 +19,5 @@ urlpatterns = [
     path("webauthn/register/verify/", webauthn_register_verify, name="webauthn_register_verify"),
     path("webauthn/authenticate/options/", webauthn_authenticate_options, name="webauthn_authenticate_options"),
     path("webauthn/authenticate/verify/", webauthn_authenticate_verify, name="webauthn_authenticate_verify"),
+    path("guardar_voto/", guardar_voto, name="guardar_voto"),
 ]

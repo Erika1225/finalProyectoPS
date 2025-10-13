@@ -12,6 +12,12 @@ import re
 from .models import DNIToken, WebAuthnCredential
 import base64
 import secrets
+from .models import Voto
+from .models import Voto, WebAuthnCredential
+from rest_framework.response import Response
+from rest_framework import status
+from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
 
 """Views protegidas con JWT del usuario. El servicio internamente usa un token propio para RENIEC."""
 
@@ -370,3 +376,33 @@ def webauthn_authenticate_verify(request):
     # Aquí aceptamos la assertion y marcamos ok.
     request.session.pop("webauthn_auth_challenge", None)
     return JsonResponse({"ok": True})
+
+#Guardar votos
+@csrf_exempt
+def guardar_voto(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            dni = data.get('dni')
+            partido = data.get('partido')
+            #usuario = data.get('usuario')  # si lo agregaste
+            nombre = data.get('nombre')
+
+            # ejemplo simple de hash de voto (puedes hacerlo más robusto)
+            import hashlib
+            hash_voto = hashlib.sha256(f"{dni}{nombre}{partido}".encode()).hexdigest()
+
+            Voto.objects.create(
+                dni=dni,
+                partido=partido,
+                #usuario=usuario,
+                hash_voto=hash_voto,
+                nombre=nombre
+            )
+            return JsonResponse({'message': 'Voto guardado correctamente'}, status=201)
+
+        except Exception as e:
+            print('❌ Error al guardar voto:', e)
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)

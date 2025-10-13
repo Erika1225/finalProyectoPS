@@ -34,3 +34,17 @@ class WebAuthnCredential(models.Model):
 
     def __str__(self) -> str:
         return f"WebAuthnCredential(dni={self.dni}, cred={self.credential_id[:12]}...)"
+
+
+#guardar votos
+class Voto(models.Model):
+    id = models.AutoField(primary_key=True, db_column='id_voto')
+    dni= models.CharField(db_column='id_usuario', max_length=16)
+    partido = models.CharField(db_column='partido_politico', max_length=100)
+    nombre = models.CharField(db_column='nombre_candidato', max_length=100)
+    ts = models.BigIntegerField(db_column='fecha_voto')
+    hash_voto = models.TextField()
+
+    class Meta:
+        managed = False  # Importante: Django no intentará crear ni modificar esta tabla
+        db_table = "votos"  #  Nombre exacto de la tabla que ya tienes en tu base
