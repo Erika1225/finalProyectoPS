@@ -112,11 +112,11 @@ export default function BarcodeVerification() {
       if (verified) {
         try { localStorage.setItem('face_verified', '1'); } catch { /* ignore */ }
         setModalTitle("Verificación exitosa");
-        setModalBody("Las imágenes coinciden. Continuando con la biometría...");
+        setModalBody("Las imágenes coinciden. Ingresando a votación...");
         setModalVariant("success");
         setModalOpen(true);
         // Redirigir tras una breve pausa
-        setTimeout(() => navigate("/verificacion/biometrica"), 1200);
+        setTimeout(() => navigate("/votacion"), 1200);
       } else {
         setModalTitle("No coincide");
         setModalBody("Las imágenes no coinciden. Por favor, vuelva a intentarlo.");

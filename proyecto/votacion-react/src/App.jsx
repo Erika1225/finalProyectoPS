@@ -3,8 +3,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerificationSelection from "./pages/VerificationSelection";
-import ValidacionDNI from "./pages/ValidacionDNI";
-import ValidacionBiometrica from "./pages/ValidacionBiometrica";
+import ValidacionDNI from "./pages/ValidacionDNI"; // used for rostro
+import DniCheck from "./pages/DniCheck"; // DNI API check step
+import PhoneVerification from "./pages/PhoneVerification";
 import Votacion from "./pages/votacion";
 import Confirmacion from "./pages/confirmation";
 import Reportes from "./pages/reportes";
@@ -19,18 +20,9 @@ export default function App() {
       <Route path="/" element={<Login />} />
       <Route path="/registro" element={<Register />} />
       <Route path="/verificacion" element={<VerificationSelection />} />
-      <Route path="/verificacion/dni" element={<ValidacionDNI />} />
-      <Route
-        path="/verificacion/biometrica"
-        element={
-          <ProtectedRoute>
-            <StepGuard>
-              <ValidacionBiometrica />
-            </StepGuard>
-          </ProtectedRoute>
-        }
-      />
-      <Route path="/verificacion/rostro" element={<Navigate to="/votacion" replace />} />
+      <Route path="/verificacion/dni" element={<DniCheck />} />
+      <Route path="/verificacion/telefono" element={<PhoneVerification />} />
+      <Route path="/verificacion/rostro" element={<ValidacionDNI />} />
       <Route path="/votacion" element={<Votacion />}/>
       <Route path="/confirmacion" element={<Confirmacion />} />
       <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />

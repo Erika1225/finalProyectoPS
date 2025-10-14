@@ -1,4 +1,3 @@
-
 # Framework principal
 Django==4.2.7
 
@@ -23,5 +22,8 @@ wheel>=0.44
 # HTTP client
 requests>=2.31.0
 
-# Opcional: reconocimiento facial (instalar sólo si usarás /api/face-verify/)
-# deepface==0.0.79
+# Reconocimiento facial (necesario para /api/face-verify/)
+deepface==0.0.79
+
+# OTP por SMS
+twilio==9.3.6

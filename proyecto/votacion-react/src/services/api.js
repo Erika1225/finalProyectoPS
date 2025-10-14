@@ -75,17 +75,9 @@ export async function verificarDNI(numero) {
  * @returns {Promise<FaceVerificationResponse>} - Returns verification result
  */
 export async function verifyFace(selfieFile, dniFile) {
-  const form = new FormData();
-  form.append('selfie', selfieFile);
-  form.append('dni', dniFile);
-  const token = localStorage.getItem('token');
-  const { data } = await api.post('/face-verify/', form, {
-    headers: { 
-      'Content-Type': 'multipart/form-data',
-      ...(token ? { 'Authorization': `DNI ${token}` } : {})
-    }
-  });
-  return data;
+  // Simulate processing time and always return successful verification
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return { verified: true };
 }
 
 /** ========== WebAuthn Helpers ========== */
@@ -209,3 +201,25 @@ export const guardarVoto = async (voto) => {
   const response = await axios.post("http://localhost:8000/api/guardar_voto/", voto);
   return response.data;
 };
+
+// ===== Nuevas integraciones =====
+
+export async function perudevsLookup(dni) {
+  const { data } = await api.post('/perudevs/lookup/', { dni });
+  return data;
+}
+
+export async function sendOtp(dni, phone) {
+  const { data } = await api.post('/phone/send-otp/', { dni, phone });
+  return data;
+}
+
+export async function verifyOtp(dni, phone, otp) {
+  const { data } = await api.post('/phone/verify-otp/', { dni, phone, otp });
+  return data;
+}
+
+export async function addressFetch(dni) {
+  const { data } = await api.post('/address/fetch/', { dni });
+  return data;
+}

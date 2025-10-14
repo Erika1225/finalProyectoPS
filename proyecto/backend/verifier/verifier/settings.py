@@ -46,7 +46,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
 
+# Opcional en desarrollo: sirve una carpeta local de estáticos del proyecto
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    ]
+
+# Opcional para producción: dónde collectstatic depositará los archivos
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Configuración de CORS
 CORS_ALLOW_ALL_ORIGINS = True  # Solo para desarrollo
 CORS_ALLOW_CREDENTIALS = True
@@ -185,7 +194,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
 
 
 # Default primary key field type
@@ -207,6 +215,18 @@ CORS_ALLOWED_ORIGINS = [
 # RENIEC / decolecta config (no hardcodear el token en el repo)
 RENEIC_API = os.getenv('RENEIC_API')
 RENEIC_TOKEN = os.getenv('RENEIC_TOKEN')  # definir en .env o en variables de entorno
+
+# PeruDevs DNI API
+PERUDEVS_KEY = os.getenv('PERUDEVS_KEY')
+
+# Dirección API (bearer y base URL)
+DIRECCION_API_BASE = os.getenv('DIRECCION_API_BASE', 'https://miapi.cloud')
+DIRECCION_API_BEARER = os.getenv('DIRECCION_API_BEARER')
+
+# Twilio SMS
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_FROM = os.getenv('TWILIO_FROM')
 
 # Django REST Framework / JWT
 REST_FRAMEWORK = {

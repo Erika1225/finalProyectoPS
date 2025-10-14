@@ -9,6 +9,12 @@ from .views import (
     webauthn_authenticate_options,
     webauthn_authenticate_verify,
 )
+from .extra_views import (
+    perudevs_lookup,
+    phone_send_otp,
+    phone_verify_otp,
+    address_fetch,
+)
 
 urlpatterns = [
     path("dni/", verificar_dni, name="verificar_dni"),
@@ -20,4 +26,9 @@ urlpatterns = [
     path("webauthn/authenticate/options/", webauthn_authenticate_options, name="webauthn_authenticate_options"),
     path("webauthn/authenticate/verify/", webauthn_authenticate_verify, name="webauthn_authenticate_verify"),
     path("guardar_voto/", guardar_voto, name="guardar_voto"),
+    # Nuevos endpoints
+    path("perudevs/lookup/", perudevs_lookup, name="perudevs_lookup"),
+    path("phone/send-otp/", phone_send_otp, name="phone_send_otp"),
+    path("phone/verify-otp/", phone_verify_otp, name="phone_verify_otp"),
+    path("address/fetch/", address_fetch, name="address_fetch"),
 ]

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginWithDni } from "../services/api";
+import { loginWithDni, perudevsLookup, addressFetch } from "../services/api";
 
 export default function Login() {
   const [dni, setDni] = useState("");
@@ -19,11 +19,49 @@ export default function Login() {
       setLoading(true);
       setError("");
       
-      // Usar la función de la API para iniciar sesión
+      // 1) Login por DNI (guarda token y dni en localStorage)
       await loginWithDni(dni);
-      
-      // Redirigir a la página de verificación de DNI después del inicio de sesión exitoso
-      navigate("/verificacion/dni");
+
+      // 2) Consultar PeruDevs (obtener fecha_nacimiento) y validar mayoría de edad
+      try {
+        const pd = await perudevsLookup(dni).catch(() => null);
+        const birthStr = pd?.persona?.fecha_nacimiento; // formato esperado: DD/MM/YYYY
+        // Exigir fecha de nacimiento para continuar
+        if (!birthStr) {
+          setError("Solo esta permitido votar a mayores de edad");
+          return; // Detener flujo si no podemos validar la mayoría de edad
+        }
+        if (birthStr) {
+          const [dd, mm, yyyy] = birthStr.split("/");
+          const birthDate = new Date(Number(yyyy), Number(mm) - 1, Number(dd));
+          const today = new Date();
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const m = today.getMonth() - birthDate.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+          if (age < 18) {
+            setError("Debes ser mayor de edad para continuar");
+            return; // Detener flujo
+          }
+        }
+        // Guardar algunos datos opcionales
+        if (pd?.persona) {
+          localStorage.setItem("persona_nombre", pd.persona.nombre_completo || "");
+          localStorage.setItem("persona_genero", pd.persona.genero || "");
+          localStorage.setItem("persona_fnac", birthStr || "");
+        }
+      } catch {
+        // Si falla PeruDevs, no impedimos el flujo (política de tolerancia)
+      }
+
+      // 3) Dirección/distrito (no bloqueante)
+      addressFetch(dni)
+        .then(addr => {
+          if (addr?.distrito) localStorage.setItem("persona_distrito", addr.distrito || "");
+        })
+        .catch(() => {});
+
+      // 4) Ir a verificación por teléfono (OTP)
+      navigate("/verificacion/telefono");
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
       setError(err.response?.data?.error || "Error al iniciar sesión");
